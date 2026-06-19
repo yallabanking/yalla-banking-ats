@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YALLA BANKING ATS SCORE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#0a0a0f;
+  --bg-secondary:#12121a;
+  --bg-glass:rgba(255,255,255,0.05);
+  --border-glass:rgba(255,255,255,0.08);
+  --text-primary:#ffffff;
+  --text-secondary:rgba(255,255,255,0.7);
+  --text-muted:rgba(255,255,255,0.4);
+  --accent-blue:#3b82f6;
+  --accent-purple:#8b5cf6;
+  --accent-pink:#ec4899;
+  --accent-green:#10b981;
+  --accent-orange:#f59e0b;
+  --accent-red:#ef4444;
+  --gradient-primary:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);
+  --radius-md:16px;
+  --radius-lg:24px;
+}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.6;
+}
+.bg-effects{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.3;animation:float 20s infinite ease-in-out}
+.bg-orb:nth-child(1){width:400px;height:400px;background:radial-gradient(circle,#3b82f6,transparent);top:-10%;left:-5%}
+.bg-orb:nth-child(2){width:500px;height:500px;background:radial-gradient(circle,#8b5cf6,transparent);top:40%;right:-10%}
+.bg-orb:nth-child(3){width:350px;height:350px;background:radial-gradient(circle,#ec4899,transparent);bottom:-5%;left:30%}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-30px) scale(1.05)}66%{transform:translate(-20px,20px) scale(0.95)}}
+.container{max-width:1200px;margin:0 auto;padding:1rem;position:relative;z-index:1}
+@media(min-width:768px){.container{padding:2rem}}
+.screen{display:none;animation:fadeIn 0.4s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.glass-card{background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:var(--radius-lg);padding:1.5rem;backdrop-filter:blur(20px)}
+@media(min-width:768px){.glass-card{padding:2rem}}
+.app-header{text-align:center;padding:2rem 1rem;margin-bottom:2rem}
+@media(min-width:768px){.app-header{padding:3rem 2rem;margin-bottom:3rem}}
+.logo-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1rem;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:100px;font-size:0.75rem;font-weight:500;color:var(--text-secondary);margin-bottom:1rem}
+.logo-badge::before{content:'';width:6px;height:6px;background:var(--accent-green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.app-header h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:700;line-height:1.2;margin-bottom:0.75rem;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.app-header p{font-size:0.9rem;color:var(--text-secondary);max-width:500px;margin:0 auto}
+.auth-container{max-width:450px;margin:0 auto;padding:2rem 1rem}
+.auth-title{font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:0.5rem;font-family:'Space Grotesk',sans-serif}
+.auth-subtitle{text-align:center;color:var(--text-secondary);font-size:0.9rem;margin-bottom:2rem}
+.form-group{margin-bottom:1.25rem}
+.form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.5rem}
+.form-input{width:100%;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);font-family:inherit;font-size:0.95rem;color:var(--text-primary);transition:all 0.3s}
+.form-input:focus{outline:none;border-color:rgba(139,92,246,0.5);background:rgba(255,255,255,0.05);box-shadow:0 0 0 4px rgba(139,92,246,0.1)}
+.form-input::placeholder{color:var(--text-muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem 2rem;border:none;border-radius:100px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none;width:100%}
+.btn-primary{background:var(--gradient-primary);color:#fff;box-shadow:0 4px 20px rgba(139,92,246,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,0.4)}
+.btn-primary:active{transform:translateY(0)}
+.auth-link{color:var(--accent-purple);text-decoration:none;font-weight:600;cursor:pointer}
+.auth-link:hover{text-decoration:underline}
+.alert{padding:1rem 1.25rem;border-radius:var(--radius-md);margin-bottom:1rem;font-size:0.85rem}
+.alert-success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--accent-green)}
+.alert-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--accent-red)}
+.alert-info{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue)}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:100px;margin-bottom:1.5rem;backdrop-filter:blur(20px)}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;padding:0.4rem 0.8rem;border-radius:100px;font-family:inherit}
+.nav-btn:hover{background:rgba(255,255,255,0.1);color:var(--text-primary)}
+.dashboard-grid{display:grid;grid-template-columns:1fr;gap:1.25rem;margin-bottom:2rem}
+@media(min-width:768px){.dashboard-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem}}
+.service-card{padding:2rem;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all 0.3s}
+.service-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-4px)}
+.service-icon{width:70px;height:70px;margin:0 auto 1.25rem;background:var(--gradient-primary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.service-card h3{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;font-family:'Space Grotesk',sans-serif}
+.service-card p{color:var(--text-secondary);font-size:0.85rem}
+.service-price{display:inline-block;margin-top:1rem;padding:0.4rem 1rem;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:100px;font-size:0.85rem;font-weight:600;color:var(--accent-purple)}
+.upload-grid{display:grid;grid-template-columns:1fr;gap:1.25rem;margin-bottom:1.5rem}
+@media(min-width:768px){.upload-grid{grid-template-columns:1fr 1fr}}
+.drop-zone{border:2px dashed rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all 0.3s;background:rgba(255,255,255,0.02)}
+.drop-zone:hover,.drop-zone.dragover{border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.05)}
+.drop-zone-icon{width:50px;height:50px;margin:0 auto 0.75rem;background:var(--gradient-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.drop-zone p{color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.3rem}
+.drop-zone .formats{font-size:0.75rem;color:var(--text-muted)}
+.file-name{margin-top:0.75rem;padding:0.6rem 1rem;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:8px;font-size:0.8rem;color:var(--accent-blue);font-weight:500;display:none}
+textarea{width:100%;min-height:140px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem;font-family:inherit;font-size:0.85rem;resize:vertical;transition:all 0.3s;color:var(--text-primary)}
+textarea:focus{outline:none;border-color:rgba(139,92,246,0.5);box-shadow:0 0 0 4px rgba(139,92,246,0.1)}
+textarea::placeholder{color:var(--text-muted)}
+.score-dashboard{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-bottom:2rem}
+@media(min-width:768px){.score-dashboard{grid-template-columns:280px 1fr;gap:2rem}}
+.gauge-container{text-align:center;padding:2rem 1rem}
+.gauge-svg{width:220px;height:220px;margin:0 auto}
+.gauge-level{font-size:1.2rem;font-weight:700;margin-top:1rem;font-family:'Space Grotesk',sans-serif}
+.metric-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem;margin-bottom:1.5rem}
+@media(max-width:768px){.metric-row{grid-template-columns:repeat(2,1fr)}}
+.metric-card{background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1.25rem 0.75rem;text-align:center}
+.metric-val{font-size:1.6rem;font-weight:800;font-family:'Space Grotesk',sans-serif}
+.metric-max{font-size:0.8rem;color:var(--text-muted)}
+.metric-label{font-size:0.7rem;color:var(--text-secondary);font-weight:500;margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.05em}
+.metric-bar{height:4px;border-radius:2px;background:rgba(255,255,255,0.1);margin-top:0.6rem;overflow:hidden}
+.metric-bar-fill{height:100%;border-radius:2px;transition:width 1.2s}
+.tip-card{background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem 1.25rem;margin-bottom:0.6rem;position:relative;overflow:hidden}
+.tip-card::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:var(--gradient-primary)}
+.tip-category{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-purple);background:rgba(139,92,246,0.1);padding:0.2rem 0.6rem;border-radius:100px;display:inline-block;margin-bottom:0.4rem}
+.tip-text{color:var(--text-secondary);font-size:0.85rem;line-height:1.5}
+.tabs{display:flex;gap:0.25rem;margin-bottom:1.5rem;padding:0.4rem;background:rgba(255,255,255,0.03);border-radius:100px;border:1px solid var(--border-glass);overflow-x:auto}
+.tab-btn{padding:0.6rem 1.25rem;border:none;background:transparent;font-family:inherit;font-size:0.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;border-radius:100px;transition:all 0.3s;white-space:nowrap}
+.tab-btn.active{background:var(--gradient-primary);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+.info-item{background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1rem}
+.info-item .label{font-size:0.7rem;color:var(--text-muted);font-weight:500;text-transform:uppercase}
+.info-item .value{font-size:1rem;font-weight:700;margin-top:0.2rem;font-family:'Space Grotesk',sans-serif}
+.payment-card{max-width:500px;margin:0 auto;text-align:center;padding:2.5rem 2rem}
+.payment-amount{font-size:3rem;font-weight:800;font-family:'Space Grotesk',sans-serif;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:1rem 0}
+.payment-desc{color:var(--text-secondary);margin-bottom:2rem;font-size:0.9rem}
+.paymob-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:100px;font-size:0.8rem;color:var(--accent-green);margin-top:1rem}
+.back-btn{display:inline-flex;align-items:center;gap:0.5rem;background:none;border:none;color:var(--text-secondary);font-family:inherit;font-size:0.85rem;cursor:pointer;padding:0.5rem 0;margin-bottom:1rem}
+.back-btn:hover{color:var(--text-primary)}
+.section-title{font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;font-family:'Space Grotesk',sans-serif}
+@media(min-width:768px){.section-title{font-size:1.5rem}}
+.floating-btns{position:fixed;bottom:1rem;left:1rem;right:1rem;display:flex;gap:0.75rem;justify-content:center;z-index:99}
+@media(min-width:768px){.floating-btns{justify-content:flex-end;left:auto;right:1.5rem;bottom:1.5rem}}
+.float-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.float-btn.whatsapp{background:#25D366;color:#fff}
+.float-btn.chat{background:var(--gradient-primary);color:#fff}
+.chat-container{position:fixed;bottom:80px;left:1rem;right:1rem;max-width:400px;max-height:500px;background:var(--bg-secondary);border:1px solid var(--border-glass);border-radius:var(--radius-lg);display:none;flex-direction:column;z-index:100}
+.chat-container.open{display:flex}
+.chat-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border-glass);display:flex;align-items:center;justify-content:space-between}
+.chat-header h4{font-size:0.9rem;font-weight:600}
+.chat-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;min-height:200px;max-height:300px}
+.chat-msg{margin-bottom:0.75rem;padding:0.75rem 1rem;border-radius:var(--radius-md);font-size:0.85rem;line-height:1.5;max-width:85%}
+.chat-msg.user{background:var(--gradient-primary);color:#fff;margin-right:auto}
+.chat-msg.bot{background:rgba(255,255,255,0.05);color:var(--text-secondary);margin-left:auto}
+.chat-input-area{padding:0.75rem;border-top:1px solid var(--border-glass);display:flex;gap:0.5rem}
+.chat-input{flex:1;padding:0.75rem 1rem;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:100px;font-family:inherit;font-size:0.85rem;color:var(--text-primary)}
+.chat-input:focus{outline:none;border-color:rgba(139,92,246,0.5)}
+.chat-send{width:40px;height:40px;border-radius:50%;background:var(--gradient-primary);border:none;color:#fff;cursor:pointer;font-size:1rem}
+.app-footer{text-align:center;padding:2rem 1rem;margin-top:3rem;border-top:1px solid var(--border-glass)}
+.footer-logo{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;font-family:'Space Grotesk',sans-serif}
+.footer-links{display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.footer-links a{color:var(--text-secondary);text-decoration:none;font-size:0.85rem}
+.footer-links a:hover{color:var(--accent-purple)}
+.footer-copy{font-size:0.8rem;color:var(--text-muted)}
+.footer-copy a{color:var(--accent-purple);text-decoration:none}
+.footer-copy a:hover{text-decoration:underline}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(10,10,15,0.9);z-index:1000;justify-content:center;align-items:center;backdrop-filter:blur(10px)}
+.loading-overlay.show{display:flex}
+.loading-box{text-align:center}
+.spinner{width:50px;height:50px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--accent-purple);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-box p{color:var(--text-secondary);font-weight:500;font-size:0.9rem}
+.about-section{padding:2rem 1rem;margin-bottom:2rem}
+.about-section h3{font-size:1.3rem;font-weight:700;margin-bottom:1rem;font-family:'Space Grotesk',sans-serif;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.about-section p{color:var(--text-secondary);font-size:0.9rem;line-height:1.8;margin-bottom:1rem}
+</style>
+</head>
+<body>
+
+<div class="bg-effects">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+
+<div class="container">
+
+  <!-- LOGIN SCREEN -->
+  <div class="screen active" id="screen-login">
+    <header class="app-header">
+      <div class="logo-badge">ATS Score Platform</div>
+      <h1>YALLA BANKING<br>ATS SCORE</h1>
+      <p>Analyze your CV and get a professional ATS evaluation</p>
+    </header>
+    <div class="auth-container">
+      <div class="glass-card">
+        <h2 class="auth-title">Login</h2>
+        <p class="auth-subtitle">Enter your mobile number to continue</p>
+        <div id="login-alert"></div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" class="form-input" id="login-phone" placeholder="01xxxxxxxxx" maxlength="11" dir="ltr">
+        </div>
+        <button class="btn btn-primary" id="btn-login">Continue</button>
+        <p style="text-align:center;margin-top:1.25rem;font-size:0.85rem;color:var(--text-secondary)">
+          New user? <span class="auth-link" id="goto-register">Register now</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER SCREEN -->
+  <div class="screen" id="screen-register">
+    <header class="app-header">
+      <div class="logo-badge">ATS Score Platform</div>
+      <h1>Create New Account</h1>
+      <p>Create your account to start analyzing your CV</p>
+    </header>
+    <div class="auth-container">
+      <div class="glass-card">
+        <div id="register-alert"></div>
+        <div class="form-group">
+          <label class="form-label">Full Name (4 parts)</label>
+          <input type="text" class="form-input" id="reg-name" placeholder="First Second Third Fourth">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="reg-email" placeholder="example@email.com" dir="ltr">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Governorate</label>
+          <select class="form-input" id="reg-gov">
+            <option value="">Select Governorate</option>
+            <option>Cairo</option><option>Giza</option><option>Alexandria</option>
+            <option>Dakahlia</option><option>Sharqia</option><option>Monufia</option>
+            <option>Qalyubia</option><option>Beheira</option><option>Gharbia</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" class="form-input" id="reg-phone" placeholder="01xxxxxxxxx" maxlength="11" dir="ltr">
+        </div>
+        <button class="btn btn-primary" id="btn-register">Create Account</button>
+        <p style="text-align:center;margin-top:1.25rem;font-size:0.85rem;color:var(--text-secondary)">
+          Already have an account? <span class="auth-link" id="goto-login">Login</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERIFY SCREEN -->
+  <div class="screen" id="screen-verify">
+    <header class="app-header">
+      <div class="logo-badge">ATS Score Platform</div>
+      <h1>Verify Account</h1>
+      <p>Verification code has been sent to your email</p>
+    </header>
+    <div class="auth-container">
+      <div class="glass-card" style="text-align:center">
+        <div id="verify-alert"></div>
+        <p class="auth-subtitle">Enter the 6-digit verification code</p>
+        <input type="text" class="form-input" id="verify-code" placeholder="Enter code" maxlength="6" dir="ltr" style="text-align:center;font-size:1.5rem;letter-spacing:0.5rem">
+        <div style="margin-top:1.5rem">
+          <button class="btn btn-primary" id="btn-verify">Verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="screen-dashboard">
+    <nav class="nav-bar">
+      <div class="nav-logo">YALLA BANKING</div>
+      <div style="display:flex;align-items:center;gap:0.5rem">
+        <span id="user-greeting" style="font-size:0.8rem;color:var(--text-secondary)">Welcome</span>
+        <button class="nav-btn" id="btn-logout">Logout</button>
+      </div>
+    </nav>
+    <header class="app-header" style="padding:1.5rem 1rem;margin-bottom:1.5rem">
+      <h1 style="font-size:clamp(1.5rem,4vw,2.5rem)">Welcome</h1>
+      <p>Choose the service you need</p>
+    </header>
+    <div class="dashboard-grid">
+      <div class="glass-card service-card" id="service-review">
+        <div class="service-icon">🔍</div>
+        <h3>CV Review</h3>
+        <p>Comprehensive analysis and ATS compatibility evaluation</p>
+        <div class="service-price">10 EGP</div>
+      </div>
+      <div class="glass-card service-card" id="service-create">
+        <div class="service-icon">📝</div>
+        <h3>Create CV</h3>
+        <p>Professional CV + Cover Letter creation</p>
+        <div class="service-price">500 EGP</div>
+      </div>
+    </div>
+    <div class="glass-card about-section">
+      <h3>About the Platform</h3>
+      <p><strong>Yalla Banking</strong> is a specialized platform for banking and financial services. We provide professional tools to help professionals develop their careers.</p>
+      <p>This website was created by <strong>Yalla Banking Platform</strong>.</p>
+    </div>
+  </div>
+
+  <!-- CV REVIEW SCREEN -->
+  <div class="screen" id="screen-review">
+    <button class="back-btn" id="back-to-dashboard">← Back to Dashboard</button>
+    <header class="app-header" style="padding:1.5rem 1rem;margin-bottom:1.5rem">
+      <h1 style="font-size:clamp(1.3rem,4vw,2rem)">CV Review</h1>
+      <p>Upload your CV to get a comprehensive ATS evaluation</p>
+    </header>
+    <div class="upload-grid">
+      <div class="glass-card">
+        <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.75rem">Upload CV</h3>
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-icon">📄</div>
+          <p>Drag & drop or click to browse</p>
+          <div class="formats">PDF or DOCX</div>
+          <input type="file" id="fileInput" accept=".pdf,.docx" hidden>
+        </div>
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <div class="glass-card">
+        <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.75rem">Job Description (Optional)</h3>
+        <textarea id="jobDesc" placeholder="Paste job description here..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-analyze" disabled>Analyze CV - 10 EGP</button>
+  </div>
+
+  <!-- PAYMENT SCREEN -->
+  <div class="screen" id="screen-payment">
+    <button class="back-btn" id="back-to-review">← Back</button>
+    <div class="glass-card payment-card">
+      <div style="font-size:3rem;margin-bottom:1rem">💳</div>
+      <h2 class="auth-title">Payment Gateway</h2>
+      <div class="payment-amount" id="payment-amount">10 EGP</div>
+      <p class="payment-desc" id="payment-desc">CV Review and ATS Analysis</p>
+      <button class="btn btn-primary" id="btn-pay">Pay Now via Paymob</button>
+      <div class="paymob-badge">🔒 Secure Payment via Paymob</div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="screen" id="screen-results">
+    <button class="back-btn" id="back-to-dashboard2">← Back to Dashboard</button>
+    <header class="app-header" style="padding:1.5rem 1rem;margin-bottom:1.5rem">
+      <h1 style="font-size:clamp(1.3rem,4vw,2rem)">Analysis Results</h1>
+    </header>
+    <div class="score-dashboard">
+      <div class="glass-card gauge-container">
+        <svg class="gauge-svg" viewBox="0 0 200 200" id="gaugeSvg"></svg>
+        <div class="gauge-level" id="gaugeLevel"></div>
+      </div>
+      <div class="glass-card" style="padding:1.5rem">
+        <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:1rem;text-transform:uppercase">Score Breakdown</h3>
+        <div class="metric-row" id="metricRow"></div>
+      </div>
+    </div>
+    <h3 class="section-title">Detailed Analysis</h3>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tips">Recommendations</button>
+      <button class="tab-btn" data-tab="keywords">Summary</button>
+      <button class="tab-btn" data-tab="fileinfo">File Info</button>
+    </div>
+    <div class="tab-content active" id="tab-tips"></div>
+    <div class="tab-content" id="tab-keywords"></div>
+    <div class="tab-content" id="tab-fileinfo"></div>
+    <button class="btn btn-primary" id="downloadBtn" style="margin-top:1.5rem">Download PDF Report</button>
+  </div>
+
+  <!-- CV CREATE SCREEN -->
+  <div class="screen" id="screen-create">
+    <button class="back-btn" id="back-to-dashboard3">← Back to Dashboard</button>
+    <header class="app-header" style="padding:1.5rem 1rem;margin-bottom:1.5rem">
+      <h1 style="font-size:clamp(1.3rem,4vw,2rem)">Create CV</h1>
+      <p>We will create a professional CV + Cover Letter</p>
+    </header>
+    <div class="glass-card" style="max-width:600px;margin:0 auto">
+      <div class="alert alert-info">Your CV and Cover Letter will be sent to your email after payment</div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="create-name" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Job Title</label>
+        <input type="text" class="form-input" id="create-title" placeholder="e.g., Financial Analyst">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Years of Experience</label>
+        <input type="number" class="form-input" id="create-exp" placeholder="e.g., 5" min="0" max="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Key Skills</label>
+        <textarea id="create-skills" placeholder="List your key skills..."></textarea>
+      </div>
+      <button class="btn btn-primary" id="btn-create-order">Complete Order - 500 EGP</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Floating Buttons -->
+<div class="floating-btns">
+  <button class="float-btn whatsapp" id="btn-whatsapp">💬</button>
+  <button class="float-btn chat" id="btn-chat-toggle">🤖</button>
+</div>
+
+<!-- Chat -->
+<div class="chat-container" id="chatContainer">
+  <div class="chat-header">
+    <h4>🤖 Yalla Banking Assistant</h4>
+    <button class="chat-close" id="btn-chat-close">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hello! I'm Yalla Banking assistant. How can I help you?</div>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Type your question...">
+    <button class="chat-send" id="btn-chat-send">➤</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="app-footer">
+  <div class="footer-logo">YALLA BANKING</div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/company/yallabanking" target="_blank">LinkedIn</a>
+    <a href="https://www.yallabanking.com" target="_blank">Official Website</a>
+    <a href="#" id="footer-whatsapp">Contact Us</a>
+  </div>
+  <p class="footer-copy">
+    All rights reserved to <a href="https://www.yallabanking.com" target="_blank">Yalla Banking</a> © 2025
+  </p>
+</footer>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <p id="loadingText">Loading...</p>
+  </div>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let currentUser = null;
+let uploadedFile = null;
+let analysisResults = null;
+let verificationCode = '';
+let pendingPayment = null;
+
+// ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ─── WAIT FOR DOM ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing...');
+
+  // ─── LOGIN ──────────────────────────────────────────────────────────────
+  document.getElementById('btn-login').addEventListener('click', function() {
+    console.log('Login button clicked');
+    const phone = document.getElementById('login-phone').value.trim();
+    const alertEl = document.getElementById('login-alert');
+    
+    if (!phone || phone.length < 10 || phone.length > 11 || !/^\d+$/.test(phone)) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please enter a valid mobile number (10-11 digits)</div>';
+      return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('yb_users') || '[]');
+    const user = users.find(u => u.phone === phone);
+    
+    if (user) {
+      currentUser = user;
+      localStorage.setItem('yb_current', JSON.stringify(user));
+      document.getElementById('user-greeting').textContent = 'Welcome ' + user.name.split(' ')[0];
+      showScreen('screen-dashboard');
+    } else {
+      alertEl.innerHTML = '<div class="alert alert-info">Number not registered. Redirecting to registration...</div>';
+      setTimeout(function() {
+        showScreen('screen-register');
+        document.getElementById('reg-phone').value = phone;
+      }, 1500);
+    }
+  });
+
+  // Enter key for login
+  document.getElementById('login-phone').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.getElementById('btn-login').click();
+    }
+  });
+
+  // ─── NAVIGATION LINKS ───────────────────────────────────────────────────
+  document.getElementById('goto-register').addEventListener('click', function() {
+    showScreen('screen-register');
+  });
+
+  document.getElementById('goto-login').addEventListener('click', function() {
+    showScreen('screen-login');
+  });
+
+  // ─── REGISTER ───────────────────────────────────────────────────────────
+  document.getElementById('btn-register').addEventListener('click', function() {
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const gov = document.getElementById('reg-gov').value;
+    const phone = document.getElementById('reg-phone').value.trim();
+    const alertEl = document.getElementById('register-alert');
+    
+    if (!name || name.split(' ').length < 4) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please enter your full name (4 parts)</div>';
+      return;
+    }
+    if (!email || !email.includes('@')) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please enter a valid email address</div>';
+      return;
+    }
+    if (!gov) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please select your governorate</div>';
+      return;
+    }
+    if (!phone || phone.length < 10) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please enter a valid mobile number</div>';
+      return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('yb_users') || '[]');
+    if (users.find(u => u.phone === phone)) {
+      alertEl.innerHTML = '<div class="alert alert-error">This number is already registered.</div>';
+      return;
+    }
+    
+    verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('yb_pending', JSON.stringify({name, email, gov, phone}));
+    
+    alertEl.innerHTML = '<div class="alert alert-success">Verification code sent to ' + email + '</div>';
+    alert('Verification code (for testing): ' + verificationCode);
+    
+    showScreen('screen-verify');
+  });
+
+  // ─── VERIFY ─────────────────────────────────────────────────────────────
+  document.getElementById('btn-verify').addEventListener('click', function() {
+    const entered = document.getElementById('verify-code').value.trim();
+    const alertEl = document.getElementById('verify-alert');
+    
+    if (entered.length !== 6) {
+      alertEl.innerHTML = '<div class="alert alert-error">Please enter the complete 6-digit code</div>';
+      return;
+    }
+    
+    if (entered !== verificationCode) {
+      alertEl.innerHTML = '<div class="alert alert-error">Incorrect verification code</div>';
+      return;
+    }
+    
+    const pending = JSON.parse(localStorage.getItem('yb_pending') || '{}');
+    const user = {
+      name: pending.name,
+      email: pending.email,
+      gov: pending.gov,
+      phone: pending.phone,
+      createdAt: new Date().toISOString()
+    };
+    
+    const users = JSON.parse(localStorage.getItem('yb_users') || '[]');
+    users.push(user);
+    localStorage.setItem('yb_users', JSON.stringify(users));
+    localStorage.removeItem('yb_pending');
+    
+    currentUser = user;
+    localStorage.setItem('yb_current', JSON.stringify(user));
+    document.getElementById('user-greeting').textContent = 'Welcome ' + user.name.split(' ')[0];
+    
+    showScreen('screen-dashboard');
+  });
+
+  // ─── LOGOUT ─────────────────────────────────────────────────────────────
+  document.getElementById('btn-logout').addEventListener('click', function() {
+    currentUser = null;
+    localStorage.removeItem('yb_current');
+    showScreen('screen-login');
+  });
+
+  // ─── DASHBOARD NAVIGATION ───────────────────────────────────────────────
+  document.getElementById('service-review').addEventListener('click', function() {
+    showScreen('screen-review');
+  });
+
+  document.getElementById('service-create').addEventListener('click', function() {
+    showScreen('screen-create');
+  });
+
+  document.getElementById('back-to-dashboard').addEventListener('click', function() {
+    showScreen('screen-dashboard');
+  });
+
+  document.getElementById('back-to-dashboard2').addEventListener('click', function() {
+    showScreen('screen-dashboard');
+  });
+
+  document.getElementById('back-to-dashboard3').addEventListener('click', function() {
+    showScreen('screen-dashboard');
+  });
+
+  document.getElementById('back-to-review').addEventListener('click', function() {
+    showScreen('screen-review');
+  });
+
+  // ─── FILE UPLOAD ────────────────────────────────────────────────────────
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileNameEl = document.getElementById('fileName');
+  const analyzeBtn = document.getElementById('btn-analyze');
+
+  dropZone.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!['pdf','docx'].includes(ext)) {
+      alert('Please upload a PDF or DOCX file');
+      return;
+    }
+    uploadedFile = file;
+    fileNameEl.textContent = '📎 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+    fileNameEl.style.display = 'block';
+    analyzeBtn.disabled = false;
+  }
+
+  // ─── ANALYSIS ───────────────────────────────────────────────────────────
+  analyzeBtn.addEventListener('click', function() {
+    if (!uploadedFile) return;
+    pendingPayment = {type: 'review', amount: 10};
+    document.getElementById('payment-amount').textContent = '10 EGP';
+    document.getElementById('payment-desc').textContent = 'CV Review and ATS Analysis';
+    showScreen('screen-payment');
+  });
+
+  document.getElementById('btn-create-order').addEventListener('click', function() {
+    const name = document.getElementById('create-name').value.trim();
+    const title = document.getElementById('create-title').value.trim();
+    if (!name || !title) {
+      alert('Please enter your name and target job title');
+      return;
+    }
+    pendingPayment = {type: 'create', amount: 500};
+    document.getElementById('payment-amount').textContent = '500 EGP';
+    document.getElementById('payment-desc').textContent = 'Professional CV + Cover Letter Creation';
+    showScreen('screen-payment');
+  });
+
+  // ─── PAYMENT ────────────────────────────────────────────────────────────
+  document.getElementById('btn-pay').addEventListener('click', function() {
+    showLoading('Redirecting to payment gateway...');
+    setTimeout(function() {
+      hideLoading();
+      alert('Payment successful (demo mode)\n\nIn production, Paymob API will be integrated');
+      
+      if (pendingPayment.type === 'review') {
+        performAnalysis();
+      } else {
+        alert('Your order has been received!\n\nYour CV and Cover Letter will be sent to: ' + (currentUser ? currentUser.email : 'your email'));
+        showScreen('screen-dashboard');
+      }
+    }, 2000);
+  });
+
+  // ─── CV ANALYSIS ────────────────────────────────────────────────────────
+  async function performAnalysis() {
+    showLoading('Analyzing your CV...');
+    
+    try {
+      const text = await extractText(uploadedFile);
+      if (!text || text.trim().length === 0) {
+        hideLoading();
+        alert('Could not extract text from the file');
+        return;
+      }
+      
+      const jobDesc = document.getElementById('jobDesc').value;
+      const results = calculateScore(text, jobDesc, uploadedFile.name);
+      analysisResults = results;
+      renderResults(results);
+      
+      hideLoading();
+      showScreen('screen-results');
+    } catch (err) {
+      hideLoading();
+      alert('Analysis error: ' + err.message);
+    }
+  }
+
+  async function extractText(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'pdf') return extractPdfText(file);
+    if (ext === 'docx') return extractDocxText(file);
+    throw new Error('Unsupported format');
+  }
+
+  async function extractPdfText(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    return fullText.trim();
+  }
+
+  async function extractDocxText(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({arrayBuffer});
+    return result.value;
+  }
+
+  // ─── SCORING ENGINE ─────────────────────────────────────────────────────
+  function calculateScore(text, jobDesc, filename) {
+    const textLower = text.toLowerCase();
+    const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+    
+    let contactScore = 0, experienceScore = 0, educationScore = 0, skillsScore = 0, formatScore = 0;
+    const contactTips = [], experienceTips = [], educationTips = [], skillsTips = [], formatTips = [];
+
+    // CONTACT (20 pts)
+    if (/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(text)) { contactScore += 4; contactTips.push({type:'success',text:'Email address found'}); }
+    else { contactTips.push({type:'error',text:'No email address found'}); }
+    
+    if (/(\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/.test(text)) { contactScore += 4; contactTips.push({type:'success',text:'Phone number found'}); }
+    else { contactTips.push({type:'error',text:'No phone number found'}); }
+    
+    if (/(?:linkedin\.com\/in\/|linkedin\s*:)/i.test(text)) { contactScore += 4; contactTips.push({type:'success',text:'LinkedIn profile found'}); }
+    else { contactTips.push({type:'error',text:'No LinkedIn profile found'}); }
+    
+    if (/\b(cairo|giza|alexandria|egypt|city|street|road)\b/i.test(text)) { contactScore += 4; contactTips.push({type:'success',text:'Location information found'}); }
+    else { contactTips.push({type:'error',text:'No location information found'}); }
+    
+    const lines = text.split('\n').filter(l => l.trim().length > 0);
+    const firstLine = lines[0] || '';
+    if (firstLine.length > 3 && firstLine.length < 50 && !firstLine.match(/resume|cv|curriculum/i)) { contactScore += 4; contactTips.push({type:'success',text:'Name identified at the top'}); }
+    else { contactTips.push({type:'error',text:'Name not clearly identified at the top'}); }
+
+    // EXPERIENCE (30 pts)
+    if (/\b(work\s+experience|experience|employment\s+history|professional\s+experience)\b/i.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Work experience section found'}); }
+    else { experienceTips.push({type:'error',text:'No work experience section found'}); }
+    
+    if (/\b(manager|director|analyst|engineer|developer|consultant|specialist|officer|coordinator|administrator|assistant|executive|lead|head|chief)\b/i.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Job titles identified'}); }
+    else { experienceTips.push({type:'error',text:'No clear job titles found'}); }
+    
+    if (/\b(inc|ltd|llc|corp|company|group|bank|corporation)\b/i.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Company names identified'}); }
+    else { experienceTips.push({type:'error',text:'No company names found'}); }
+    
+    if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4}\b/i.test(text) || /\d{4}\s*[-–]\s*(present|\d{4})\b/i.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Employment dates found'}); }
+    else { experienceTips.push({type:'error',text:'No employment dates found'}); }
+    
+    if (/\b(managed|led|developed|implemented|achieved|increased|reduced|optimized|analyzed|coordinated|delivered|transformed|spearheaded)\b/i.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Accomplishment statements found'}); }
+    else { experienceTips.push({type:'error',text:'No accomplishment statements found'}); }
+    
+    if (/\d+\s*(%|percent|dollars|\$|usd|egd|million|billion|thousand)/i.test(text) || /\b(increased|reduced|improved|grew|saved)\s+.*\d+/.test(text)) { experienceScore += 5; experienceTips.push({type:'success',text:'Quantifiable metrics found'}); }
+    else { experienceTips.push({type:'warning',text:'Few or no quantifiable metrics found. Include numbers to quantify your achievements (%, $, etc.).'}); }
+
+    // EDUCATION (20 pts)
+    if (/\b(education|academic|qualifications|degrees?)\b/i.test(text)) { educationScore += 4; educationTips.push({type:'success',text:'Education section found'}); }
+    else { educationTips.push({type:'error',text:'No education section found'}); }
+    
+    if (/\b(bachelor|master|phd|mba|bsc|ba|ma|msc|associate|diploma)\b/i.test(text)) { educationScore += 4; educationTips.push({type:'success',text:'Degree information found'}); }
+    else { educationTips.push({type:'error',text:'No degree information found'}); }
+    
+    if (/\b(business|finance|accounting|economics|engineering|computer|science|management|marketing)\b/i.test(text)) { educationScore += 4; educationTips.push({type:'success',text:'Field of study found'}); }
+    else { educationTips.push({type:'error',text:'No field of study found'}); }
+    
+    if (/\b(20\d{2}|19\d{2})\b/.test(text)) { educationScore += 4; educationTips.push({type:'success',text:'Graduation year found'}); }
+    else { educationTips.push({type:'error',text:'No graduation year found'}); }
+    
+    if (/\b(university|college|institute|academy|school)\b/i.test(text)) { educationScore += 4; educationTips.push({type:'success',text:'Institution name found'}); }
+    else { educationTips.push({type:'error',text:'No institution name found'}); }
+
+    // SKILLS (20 pts)
+    if (/\b(skills|technical\s+skills|core\s+competencies|competencies|expertise)\b/i.test(text)) { skillsScore += 4; skillsTips.push({type:'success',text:'Skills section found'}); }
+    else { skillsTips.push({type:'error',text:'No skills section found'}); }
+    
+    if (/\b(python|java|sql|excel|powerpoint|word|tableau|power\s*bi|sap|oracle|aws|azure|docker|kubernetes|git|jira|software|programming|database|analytics|modeling)\b/i.test(text)) { skillsScore += 4; skillsTips.push({type:'success',text:'Technical skills found'}); }
+    else { skillsTips.push({type:'warning',text:'No technical skills found. Consider adding relevant technical skills.'}); }
+    
+    if (/\b(communication|teamwork|leadership|problem.solving|critical.thinking|time.management|collaboration|adaptability|creativity)\b/i.test(text)) { skillsScore += 4; skillsTips.push({type:'success',text:'Soft skills found'}); }
+    else { skillsTips.push({type:'warning',text:'No soft skills found. Add soft skills like communication, teamwork, leadership.'}); }
+    
+    if (/\b(english|arabic|french|german|spanish|chinese|languages?)\b/i.test(text)) { skillsScore += 4; skillsTips.push({type:'success',text:'Languages found'}); }
+    else { skillsTips.push({type:'warning',text:'No languages found. Add languages you speak.'}); }
+    
+    if (/\b(cfa|cma|cpa|acca|frm|pmp|certification|certified|license|licensed)\b/i.test(text)) { skillsScore += 4; skillsTips.push({type:'success',text:'Certifications found'}); }
+    else { skillsTips.push({type:'warning',text:'No certifications found. Add relevant certifications if you have any.'}); }
+
+    // FORMAT (10 pts)
+    if (wordCount >= 200 && wordCount <= 800) { formatScore += 2; formatTips.push({type:'success',text:'Resume length appears appropriate'}); }
+    else if (wordCount < 200) { formatTips.push({type:'warning',text:'Resume seems too short.'}); }
+    else { formatTips.push({type:'warning',text:'Resume seems too long.'}); }
+    
+    if (/[-•*]\s+\w+/.test(text)) { formatScore += 2; formatTips.push({type:'success',text:'Bullet points found for easy readability'}); }
+    else { formatTips.push({type:'warning',text:'No bullet points found. Use bullet points for better readability.'}); }
+    
+    const sectionCount = [/\b(summary|objective|profile)\b/i,/\b(experience|work)\b/i,/\b(education)\b/i,/\b(skills)\b/i,/\b(contact|email|phone)\b/i].filter(p => p.test(text)).length;
+    if (sectionCount >= 4) { formatScore += 2; formatTips.push({type:'success',text: sectionCount + ' distinct sections identified'}); }
+    else { formatTips.push({type:'warning',text: 'Only ' + sectionCount + ' sections found. Add more clear sections.'}); }
+    
+    const dateFormats = [(text.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4}\b/gi) || []).length, (text.match(/\b\d{1,2}\/\d{4}\b/g) || []).length, (text.match(/\b\d{4}\s*[-–]\s*\d{4}\b/g) || []).length];
+    const formatsUsed = dateFormats.filter(n => n > 0).length;
+    if (formatsUsed <= 1) { formatScore += 2; formatTips.push({type:'success',text:'Date formats appear consistent'}); }
+    else { formatTips.push({type:'warning',text:'Date formats may be inconsistent. Use the same date format throughout.'}); }
+    
+    if (text.split('\n\n').length > 3) { formatScore += 2; formatTips.push({type:'success',text:'Good spacing and layout detected'}); }
+    else { formatTips.push({type:'warning',text:'Potential dense text blocks detected. Use spacing to separate information.'}); }
+
+    // TOTAL
+    const total = contactScore + experienceScore + educationScore + skillsScore + formatScore;
+    
+    let level, color, recommendation;
+    if (total === 100) { level = "Perfect"; color = "#10b981"; recommendation = "Your resume is excellent and highly recommended!"; }
+    else if (total >= 85) { level = "Very Good"; color = "#22c55e"; recommendation = "Very minor adjustments needed. Your resume is almost perfect!"; }
+    else if (total >= 75) { level = "Good"; color = "#f59e0b"; recommendation = "Fix some errors with technical support."; }
+    else if (total >= 60) { level = "Average"; color = "#f97316"; recommendation = "We recommend creating a new resume."; }
+    else { level = "Poor"; color = "#ef4444"; recommendation = "You must create a new resume."; }
+
+    const allTips = [];
+    contactTips.forEach(t => allTips.push({cat: "Contact Information", ...t}));
+    experienceTips.forEach(t => allTips.push({cat: "Work Experience", ...t}));
+    educationTips.forEach(t => allTips.push({cat: "Education", ...t}));
+    skillsTips.forEach(t => allTips.push({cat: "Skills", ...t}));
+    formatTips.forEach(t => allTips.push({cat: "Format & Readability", ...t}));
+
+    return {
+      total, level, color, wordCount, filename, recommendation,
+      breakdown: {
+        contact: {score: contactScore, max: 20, tips: contactTips},
+        experience: {score: experienceScore, max: 30, tips: experienceTips},
+        education: {score: educationScore, max: 20, tips: educationTips},
+        skills: {score: skillsScore, max: 20, tips: skillsTips},
+        format: {score: formatScore, max: 10, tips: formatTips}
+      },
+      allTips
+    };
+  }
+
+  // ─── RENDER RESULTS ─────────────────────────────────────────────────────
+  function renderResults(r) {
+    drawGauge(r.total, r.color);
+    document.getElementById('gaugeLevel').textContent = r.level;
+    document.getElementById('gaugeLevel').style.color = r.color;
+
+    const metrics = [
+      {label:"Contact", score:r.breakdown.contact.score, max:20},
+      {label:"Experience", score:r.breakdown.experience.score, max:30},
+      {label:"Education", score:r.breakdown.education.score, max:20},
+      {label:"Skills", score:r.breakdown.skills.score, max:20},
+      {label:"Format", score:r.breakdown.format.score, max:10},
+    ];
+    
+    document.getElementById('metricRow').innerHTML = metrics.map(m => {
+      const pct = m.max > 0 ? (m.score/m.max*100) : 0;
+      const c = pct >= 80 ? '#10b981' : pct >= 60 ? '#f59e0b' : '#ef4444';
+      return '<div class="metric-card"><div class="metric-val" style="color:'+c+'">'+m.score+'<span class="metric-max">/'+m.max+'</span></div><div class="metric-label">'+m.label+'</div><div class="metric-bar"><div class="metric-bar-fill" style="width:'+pct+'%;background:'+c+'"></div></div></div>';
+    }).join('');
+
+    const recBanner = '<div class="glass-card" style="margin-bottom:1.5rem;padding:1.5rem;text-align:center;border:2px solid '+r.color+'"><div style="font-size:2rem;margin-bottom:0.5rem">'+(r.total===100?'🎉':r.total>=85?'✨':r.total>=75?'👍':r.total>=60?'⚠️':'❌')+'</div><div style="font-size:1.1rem;font-weight:700;color:'+r.color+';margin-bottom:0.5rem">'+r.level+' - '+r.total+'/100</div><div style="color:var(--text-secondary);font-size:0.9rem">'+r.recommendation+'</div></div>';
+
+    const tipsEl = document.getElementById('tab-tips');
+    let tipsHTML = recBanner;
+    const categories = ['Contact Information', 'Work Experience', 'Education', 'Skills', 'Format & Readability'];
+    categories.forEach(function(cat) {
+      const catTips = r.allTips.filter(function(t) { return t.cat === cat; });
+      if (catTips.length > 0) {
+        tipsHTML += '<div style="margin-bottom:1.5rem"><h4 style="color:var(--accent-purple);font-size:0.95rem;font-weight:700;margin-bottom:0.75rem;border-bottom:1px solid var(--border-glass);padding-bottom:0.5rem">'+cat+'</h4>';
+        catTips.forEach(function(tip) {
+          const icon = tip.type === 'success' ? '✓' : tip.type === 'warning' ? '⚠' : '✗';
+          const color = tip.type === 'success' ? 'var(--accent-green)' : tip.type === 'warning' ? 'var(--accent-orange)' : 'var(--accent-red)';
+          tipsHTML += '<div class="tip-card" style="border-right:3px solid '+color+'"><div class="tip-text" style="display:flex;align-items:start;gap:0.5rem"><span style="color:'+color+';font-weight:700;font-size:1.1rem;flex-shrink:0">'+icon+'</span><span>'+tip.text+'</span></div></div>';
+        });
+        tipsHTML += '</div>';
+      }
+    });
+    tipsEl.innerHTML = tipsHTML;
+
+    const kwEl = document.getElementById('tab-keywords');
+    const successCount = r.allTips.filter(function(t) { return t.type === 'success'; }).length;
+    const warningCount = r.allTips.filter(function(t) { return t.type === 'warning'; }).length;
+    const errorCount = r.allTips.filter(function(t) { return t.type === 'error'; }).length;
+    
+    kwEl.innerHTML = '<div class="glass-card" style="padding:2rem;text-align:center;margin-bottom:1.5rem"><h3 style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1rem">Analysis Summary</h3><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem"><div><div style="font-size:2rem;font-weight:800;color:var(--accent-green)">'+successCount+'</div><div style="font-size:0.8rem;color:var(--text-muted)">Passed</div></div><div><div style="font-size:2rem;font-weight:800;color:var(--accent-orange)">'+warningCount+'</div><div style="font-size:0.8rem;color:var(--text-muted)">Warnings</div></div><div><div style="font-size:2rem;font-weight:800;color:var(--accent-red)">'+errorCount+'</div><div style="font-size:0.8rem;color:var(--text-muted)">Errors</div></div></div></div>';
+
+    document.getElementById('tab-fileinfo').innerHTML = '<div class="info-grid"><div class="info-item"><div class="label">File Name</div><div class="value">'+r.filename+'</div></div><div class="info-item"><div class="label">Word Count</div><div class="value">'+r.wordCount+'</div></div><div class="info-item"><div class="label">Total Score</div><div class="value" style="color:'+r.color+'">'+r.total+'/100</div></div><div class="info-item"><div class="label">Rating</div><div class="value" style="color:'+r.color+'">'+r.level+'</div></div></div>';
+
+    document.getElementById('downloadBtn').onclick = function() { downloadReport(r); };
+  }
+
+  // ─── GAUGE ──────────────────────────────────────────────────────────────
+  function drawGauge(score, color) {
+    const svg = document.getElementById('gaugeSvg');
+    const cx=100, cy=100, r=80;
+    const startAngle = 135, endAngle = 405;
+    const scoreAngle = startAngle + (score/100) * (endAngle - startAngle);
+
+    function polarToCart(angle) {
+      const rad = (angle - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function arcPath(start, end) {
+      const s = polarToCart(start), e = polarToCart(end);
+      const large = (end - start) > 180 ? 1 : 0;
+      return 'M ' + s.x + ' ' + s.y + ' A ' + r + ' ' + r + ' 0 ' + large + ' 1 ' + e.x + ' ' + e.y;
+    }
+
+    svg.innerHTML = '<defs><linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:'+color+';stop-opacity:0.8"/><stop offset="100%" style="stop-color:'+color+';stop-opacity:1"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="'+arcPath(startAngle, endAngle)+'" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="16" stroke-linecap="round"/><path d="'+arcPath(startAngle, scoreAngle)+'" fill="none" stroke="url(#gg)" stroke-width="16" stroke-linecap="round" filter="url(#glow)"><animate attributeName="stroke-dashoffset" from="500" to="0" dur="1.2s" fill="freeze"/></path><text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" font-size="44" font-weight="800" fill="'+color+'" font-family="Space Grotesk">'+score+'</text><text x="'+cx+'" y="'+(cy+20)+'" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.4)" font-family="Cairo">/ 100</text>';
+  }
+
+  // ─── TABS ───────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ─── PDF DOWNLOAD ───────────────────────────────────────────────────────
+  function downloadReport(r) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const W = doc.internal.pageSize.getWidth();
+    let y = 15;
+
+    doc.setFillColor(30, 58, 138);
+    doc.rect(0, 0, W, 35, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('YALLA BANKING ATS SCORE', 15, 18);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Comprehensive ATS Analysis Report', 15, 28);
+    doc.setFontSize(8);
+    doc.text('Generated: ' + new Date().toLocaleDateString(), W - 15, 28, {align: 'right'});
+
+    y = 45;
+    doc.setTextColor(30, 58, 138);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Total Score: ' + r.total + '/100', 15, y);
+    y += 8;
+    doc.setFontSize(12);
+    doc.text('Rating: ' + r.level, 15, y);
+    y += 8;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Recommendation: ' + r.recommendation, 15, y);
+    y += 15;
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Score Breakdown', 15, y);
+    y += 3;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, y, W - 15, y);
+    y += 8;
+
+    const items = [
+      ['Contact Information', r.breakdown.contact.score, 20],
+      ['Work Experience', r.breakdown.experience.score, 30],
+      ['Education', r.breakdown.education.score, 20],
+      ['Skills', r.breakdown.skills.score, 20],
+      ['Format & Readability', r.breakdown.format.score, 10],
+    ];
+
+    items.forEach(function(item) {
+      doc.setTextColor(30, 58, 138);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(item[0], 15, y);
+      doc.text(item[1] + '/' + item[2], W - 15, y, {align: 'right'});
+      const barW = W - 30;
+      const pct = item[2] > 0 ? item[1] / item[2] : 0;
+      doc.setFillColor(230, 230, 230);
+      doc.roundedRect(15, y + 2, barW, 4, 2, 2, 'F');
+      const c = pct >= 0.8 ? [34, 197, 94] : pct >= 0.6 ? [245, 158, 11] : [239, 68, 68];
+      doc.setFillColor(c[0], c[1], c[2]);
+      doc.roundedRect(15, y + 2, barW * pct, 4, 2, 2, 'F');
+      y += 14;
+    });
+
+    y += 8;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Detailed Analysis', 15, y);
+    y += 3;
+    doc.line(15, y, W - 15, y);
+    y += 8;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    
+    const categories = ['Contact Information', 'Work Experience', 'Education', 'Skills', 'Format & Readability'];
+    categories.forEach(function(cat) {
+      const catTips = r.allTips.filter(function(t) { return t.cat === cat; });
+      if (catTips.length > 0) {
+        if (y > 260) { doc.addPage(); y = 20; }
+        doc.setTextColor(30, 58, 138);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.text(cat, 15, y);
+        y += 6;
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        catTips.forEach(function(tip) {
+          if (y > 270) { doc.addPage(); y = 20; }
+          const icon = tip.type === 'success' ? '[OK]' : tip.type === 'warning' ? '[WARN]' : '[ERROR]';
+          const color = tip.type === 'success' ? [34, 197, 94] : tip.type === 'warning' ? [245, 158, 11] : [239, 68, 68];
+          doc.setTextColor(color[0], color[1], color[2]);
+          doc.text(icon, 15, y);
+          doc.setTextColor(50, 50, 50);
+          const lines = doc.splitTextToSize(tip.text, W - 45);
+          doc.text(lines, 35, y);
+          y += Math.max(lines.length * 4, 6);
+        });
+        y += 4;
+      }
+    });
+
+    const pages = doc.internal.pages.length - 1;
+    for (let i = 1; i <= pages; i++) {
+      doc.setPage(i);
+      doc.setFillColor(241, 245, 249);
+      doc.rect(0, 282, W, 15, 'F');
+      doc.setTextColor(100, 116, 139);
+      doc.setFontSize(7);
+      doc.text('YALLA BANKING ATS SCORE | www.yallabanking.com', W / 2, 289, {align: 'center'});
+    }
+
+    doc.save('ATS_Report_' + r.filename.replace(/\.(pdf|docx)$/i, '') + '.pdf');
+  }
+
+  // ─── WHATSAPP ───────────────────────────────────────────────────────────
+  function openWhatsApp() {
+    const phone = '201558232376';
+    const msg = encodeURIComponent('Hello, I would like to inquire about Yalla Banking ATS Score services');
+    window.open('https://wa.me/' + phone + '?text=' + msg, '_blank');
+  }
+
+  document.getElementById('btn-whatsapp').addEventListener('click', openWhatsApp);
+  document.getElementById('footer-whatsapp').addEventListener('click', function(e) {
+    e.preventDefault();
+    openWhatsApp();
+  });
+
+  // ─── CHAT ───────────────────────────────────────────────────────────────
+  document.getElementById('btn-chat-toggle').addEventListener('click', function() {
+    document.getElementById('chatContainer').classList.toggle('open');
+  });
+
+  document.getElementById('btn-chat-close').addEventListener('click', function() {
+    document.getElementById('chatContainer').classList.remove('open');
+  });
+
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    
+    const messagesEl = document.getElementById('chatMessages');
+    messagesEl.innerHTML += '<div class="chat-msg user">' + msg + '</div>';
+    input.value = '';
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    
+    setTimeout(function() {
+      const reply = getSmartReply(msg);
+      messagesEl.innerHTML += '<div class="chat-msg bot">' + reply + '</div>';
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 500);
+  }
+
+  document.getElementById('btn-chat-send').addEventListener('click', sendChat);
+  document.getElementById('chatInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') sendChat();
+  });
+
+  function getSmartReply(msg) {
+    const msgLower = msg.toLowerCase();
+    if (msgLower.includes('price') || msgLower.includes('cost') || msgLower.includes('how much')) {
+      return 'Our service prices:<br>• CV Review: 10 EGP<br>• CV + Cover Letter Creation: 500 EGP';
+    }
+    if (msgLower.includes('ats') || msgLower.includes('system')) {
+      return 'ATS (Applicant Tracking System) is a system used by companies to automatically filter CVs. We analyze your CV to ensure it complies with this system.';
+    }
+    if (msgLower.includes('pay') || msgLower.includes('paymob')) {
+      return 'We accept payments via Paymob through all methods: credit cards, Vodafone Cash, Fawry, and other e-wallets.';
+    }
+    if (msgLower.includes('contact') || msgLower.includes('whatsapp')) {
+      return 'You can contact us via the WhatsApp button on the page, or via email.';
+    }
+    if (msgLower.includes('cv') || msgLower.includes('resume')) {
+      return 'We offer two services:<br>1. CV Review and ATS Analysis (10 EGP)<br>2. Professional CV + Cover Letter Creation (500 EGP)';
+    }
+    if (msgLower.includes('thank')) {
+      return 'You\'re welcome! We\'re here to help. 😊';
+    }
+    return 'Thanks for your question! I can help you with:<br>• Service prices<br>• ATS system explanation<br>• Payment methods<br>• Contact info<br><br>Or contact us via WhatsApp for instant assistance.';
+  }
+
+  // ─── LOADING ────────────────────────────────────────────────────────────
+  function showLoading(text) {
+    document.getElementById('loadingText').textContent = text || 'Loading...';
+    document.getElementById('loadingOverlay').classList.add('show');
+  }
+  function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('show');
+  }
+
+  // ─── CHECK SESSION ──────────────────────────────────────────────────────
+  const saved = localStorage.getItem('yb_current');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    document.getElementById('user-greeting').textContent = 'Welcome ' + currentUser.name.split(' ')[0];
+    showScreen('screen-dashboard');
+  }
+
+  console.log('All event listeners initialized successfully!');
+});
+</script>
+</body>
+</html>
